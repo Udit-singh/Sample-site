@@ -1,0 +1,152 @@
+import 'dart:async';
+
+import 'package:HappyMinds_Client/screens/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'login.dart';
+
+class WelcomeScreen extends StatefulWidget {
+  @override
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  var user;
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  Future<FirebaseUser> getUser() async {
+    final huser = await _auth.currentUser();
+
+    setState(() {
+      user = huser;
+    });
+    if (huser != null) {
+      Navigator.of(context).pushReplacementNamed('/init');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: (user == null)
+          ? Container(
+              alignment: Alignment.center,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Text(
+                        'Welcome!',
+                        style: TextStyle(
+                            fontFamily: 'SourceSansPro',
+                            fontSize: 35,
+                            color: Color(0xff060811),
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    Text(
+                      "We're here to get you the help you need",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: 'SourceSansPro',
+                          fontSize: 20,
+                          color: Color(0xff303030).withOpacity(0.5),
+                          fontWeight: FontWeight.normal),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (_) => SignUp(),
+                            ),
+                          );
+                        },
+                        color: Color(0xFF072ac8),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            "Let's Begin!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'SourceSansPro',
+                                fontSize: 16,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already a member? ',
+                          style: TextStyle(
+                              fontFamily: 'SourceSansPro',
+                              color: Color(0xff060811),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (_) => LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Login here',
+                            style: TextStyle(
+                                fontFamily: 'SourceSansPro',
+                                decoration: TextDecoration.underline,
+                                color: Color(0xff060811),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14),
+                          ),
+                        )
+                      ],
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 50.0, bottom: 100),
+                    //   child: Column(
+                    //     children: [
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(bottom: 10.0),
+                    //         child: Text(
+                    //           'Sign up using',
+                    //           style: TextStyle(
+                    //               fontFamily: 'Source Sans Pro',
+                    //               color: Colors.black,
+                    //               fontWeight: FontWeight.w400,
+                    //               fontSize: 14),
+                    //         ),
+                    //       ),
+                    //       Image.asset(
+                    //         'assets/images/google.png',
+                    //         fit: BoxFit.fill,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+            )
+          : Container(
+              color: Colors.white,
+            ),
+    );
+  }
+}
